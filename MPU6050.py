@@ -46,6 +46,8 @@ GYRO_ZOUT_L = 0x48;
 SMPLRT_DIV = 0x19; 
 CONFIG = 0x1a;
 
+WHO_AM_I_MPU6050 = 0x75; # should return 0x68 if visible.
+
 # In older raspberry pi's, you may have to put 0 as the arg instead
 bus = smbus.SMBus(1);
 
@@ -96,6 +98,10 @@ class MPU6050:
 
     def getGyro_Z(self, decimal):
         return round((self.read_raw_data(GYRO_ZOUT_H)/16384.0), decimal);
+
+
+    def getTemp(self, decimal):
+        return round((self.read_raw_data( ((float)TEMP_OUT_H)/340.00) + 36.53));
 
 
     # returns the acceleration data as a formatted, printable string.
