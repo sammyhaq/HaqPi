@@ -49,15 +49,20 @@ class LED:
 
     # Slowly pulses the LED. Displays how PWM can be used in essentially
     # any BCM pin.
-    def breathe(self):
-        while True:
+    def breathe(self, duration):
+
+        if (duration == 0):
+            return;
+        
+        else:
+            delay = duration / (100/4) / 2;
+            
             for dutyCycle in range(0, 101, 4):
                 self.pulse.ChangeDutyCycle(dutyCycle);
-                sleep(0.05);
-            for dutyCycle in reversed(range(0, 101, 4)):
+                sleep(delay);
+            for dutyCycle in reversed(range(-1, 100, 4)):
                 self.pulse.ChangeDutyCycle(dutyCycle);
-                sleep(0.05);
-        sleep(1);
+                sleep(delay);
 
 
     def destroy(self):
