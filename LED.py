@@ -16,7 +16,7 @@ from enum import Enum
 
 class LED:
 
-    # Constructor
+    # Constructor.
     def __init__(self, pin):
 
         self.pin = pin;

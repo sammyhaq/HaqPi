@@ -51,6 +51,8 @@ bus = smbus.SMBus(1);
 
 class MPU6050:
 
+    
+    # Constructor.
     def __init__(self, address):
 
          # use i2cdetect -y 1 to find the address of the chip. Example: for me, it's usually 0x68.
@@ -59,6 +61,7 @@ class MPU6050:
         bus.write_byte_data(address, PWR_MGMT_1, 0); # ensures power wakeup from sleep
         bus.write_byte_data(address, SMPLRT_DIV, 7); # delays sample rate to avoid noise
         bus.write_byte_data(address, CONFIG, 0); # disables DLPF.
+
 
     def read_raw_data(self, addr):
         high = bus.read_byte_data(self.address, addr);
@@ -70,17 +73,20 @@ class MPU6050:
         if (value > 32768):
             value = value - (32768 * 2);
 
-
         return value;
 
+
+    # Gets the corresponding raw data, converts it, rounds to the nearest
+    # decimal place, and then returns.
     def getAccel_X(self, decimal):
         return round((self.read_raw_data(ACCEL_XOUT_H)/16384.0), decimal);
-    
+
     def getAccel_Y(self, decimal):
         return round((self.read_raw_data(ACCEL_YOUT_H)/16384.0), decimal);
 
     def getAccel_Z(self, decimal):
         return round((self.read_raw_data(ACCEL_ZOUT_H)/16384.0), decimal);
+
 
     def getGyro_X(self, decimal):
         return round((self.read_raw_data(GYRO_XOUT_H)/16384.0), decimal);
@@ -90,6 +96,7 @@ class MPU6050:
 
     def getGyro_Z(self, decimal):
         return round((self.read_raw_data(GYRO_ZOUT_H)/16384.0), decimal);
+
 
     # returns the acceleration data as a formatted, printable string.
     def acceleration_toString(self, decimal):

@@ -12,7 +12,7 @@ import RPi.GPIO as GPIO
 
 class Button:
 
-    # Constructor
+    # Constructor.
     def __init__(self, pin):
        
         self.pin = pin;
