@@ -13,8 +13,8 @@ class Sender:
                  PASSWORD,
                  SENDER=None,
                  RECEIVERS=[],
-                 SUBJECT = "",
-                 MESSAGE = ""):
+                 SUBJECT="",
+                 MESSAGE=""):
 
         self.login = LOGIN
         self.password = PASSWORD
