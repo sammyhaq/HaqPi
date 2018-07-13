@@ -67,11 +67,25 @@ class Receiver:
                     body=None,
                     attachments=None):
 
-#def printEmail(mail):
-#        print("\n--\n")
-#        print(mail.from_addr)
-#        print(mail.to)
-#        print(mail.cc)
-#        print(mail.title)
-#        print(mail.body)
-#        print(mail.attachments)
+        returnList = []
+
+        for mail_id in self.imapper.listids():
+            mail = self.imapper.mail(mail_id)
+
+            if (((subject is None) or (mail.title == subject)) and
+                ((sender is None) or (mail.from_addr == sender)) and
+                ((body is None) or (mail.body == body)) and
+               ((attachments is None) or (attachment in mail.attachments))):
+
+                returnList.append(mail)
+
+        return returnList
+
+    def printEmail(mail):
+        print("\n--\n")
+        print(mail.from_addr)
+        print(mail.to)
+        print(mail.cc)
+        print(mail.title)
+        print(mail.body)
+        print(mail.attachments)
