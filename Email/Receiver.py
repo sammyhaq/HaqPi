@@ -9,78 +9,37 @@ class Receiver:
         self.imapper = easyimap.connect('imap.gmail.com', self.login,
                                         self.password)
 
-    def printAllEmail(self):
-        for mail_id in self.imapper.listids():
-            mail = self.imapper.mail(mail_id)
-
-            self.printEmail(mail)
-
+    #
+    # Getting mail objects from the inbox. 
+    #
     def getEmailAtIndex(self, i):
         return self.imapper.mail(self.imapper.listids()[i])
 
-    def getEmailsWithSubject(self, subject, partialMatch=False):
-        returnList = []
-
-        for mail_id in self.imapper.listids():
-            mail = self.imapper.mail(mail_id)
-
-            if (mail.title == subject):
-                returnList.append(mail)
-
-        return returnList
-
-    def getEmailsWithSender(self, sender, partialMatch=False):
-        returnList = []
-
-        for mail_id in self.imapper.listids():
-            mail = self.imapper.mail(mail_id)
-
-            if (mail.title == sender):
-                returnList.append(mail)
-
-        return returnList
-
-    def getEmailsWithBody(self, body):
-        returnList = []
-
-        for mail_id in self.imapper.listids():
-            mail = self.imapper.mail(mail_id)
-
-            if (body in mail.body):
-                returnList.append(mail)
-
-        return returnList
-
-    def getEmailsWithAttachment(self, attachment):
-        returnList = []
-
-        for mail_id in self.imapper.listids():
-            mail = self.imapper.mail(mail_id)
-
-            if (attachment in mail.attachments):
-                returnList.append(mail)
-
-        return returnList
-
-    def searchInbox(subject=None,
-                    sender=None,
-                    body=None,
-                    attachments=None):
+    #
+    # Returns a list of mail objects matching the search query.
+    #
+    def searchInbox(subject="",
+                    sender="",
+                    body="",
+                    attachments=""):
 
         returnList = []
 
         for mail_id in self.imapper.listids():
             mail = self.imapper.mail(mail_id)
 
-            if (((subject is None) or (mail.title == subject)) and
-                ((sender is None) or (mail.from_addr == sender)) and
-                ((body is None) or (mail.body == body)) and
-               ((attachments is None) or (attachment in mail.attachments))):
+            if (((subject == "") or (mail.title == subject)) and
+                ((sender == "") or (mail.from_addr == sender)) and
+                ((body == "") or (body in mail.body)) and
+               ((attachments == "") or (attachment in mail.attachments))):
 
                 returnList.append(mail)
 
         return returnList
 
+    #
+    # Print method.
+    #
     def printEmail(mail):
         print("\n--\n")
         print(mail.from_addr)
@@ -89,3 +48,26 @@ class Receiver:
         print(mail.title)
         print(mail.body)
         print(mail.attachments)
+
+    #
+    # Getter method for parsing the mail contents and returning
+    # them as dict key/value pairs.
+    #
+    # KEYS:
+    #   'to'
+    #   'from'
+    #   'cc'
+    #   'subject'
+    #   'body'
+    #   'attachments'
+    #
+    def parseMail(mail):
+        toReturn = {}
+        toReturn['to'] = mail.to
+        toReturn['from'] = mail.from_addr
+        toReturn['cc'] = mail.cc
+        toReturn['subject'] = mail.title
+        toReturn['body'] = mail.body
+        toReturn['attachments'] = mail.attachments
+
+        return toReturn
