@@ -46,20 +46,13 @@ GYRO_ZOUT_L = 0x48
 SMPLRT_DIV = 0x19
 CONFIG = 0x1a
 
-WHO_AM_I_MPU6050 = 0x75  # should return 0x68 if visible.
-
-# In older raspberry pi's, you may have to put 0 as the arg instead
 bus = smbus.SMBus(1)
 
 
 class MPU6050:
 
-    # Constructor.
     def __init__(self, address):
-
-        # use i2cdetect -y 1 to find the address of the chip.
-        # Example: for me, it's usually 0x68.
-        self.address = address
+        self.address = address  # 0x68 from i2cdetect
 
         # ensures power wakeup from sleep
         bus.write_byte_data(address, PWR_MGMT_1, 0)
@@ -67,9 +60,11 @@ class MPU6050:
         bus.write_byte_data(address, SMPLRT_DIV, 7)
         bus.write_byte_data(address, CONFIG, 0)  # disables DLPF.
 
+        time.sleep(1)
+
     def read_raw_data(self, addr):
-        high = bus.read_byte_data(self.address, addr)
-        low = bus.read_byte_data(self.address, addr+1)
+        high = bus.read_byte_data(0x68, addr)
+        low = bus.read_byte_data(0x68, addr+1)
 
         value = ((high << 8) | low)
 
@@ -77,10 +72,8 @@ class MPU6050:
         if (value > 32768):
             value = value - (32768 * 2)
 
+        # time.sleep(0.1);
         return value
-
-    # Gets the corresponding raw data, converts it, rounds to the nearest
-    # decimal place, and then returns.
 
     def getAccel_X(self, decimal):
         return round((self.read_raw_data(ACCEL_XOUT_H)/16384.0), decimal)
@@ -99,9 +92,6 @@ class MPU6050:
 
     def getGyro_Z(self, decimal):
         return round((self.read_raw_data(GYRO_ZOUT_H)/16384.0), decimal)
-
-    def getTemp(self, decimal):
-        return round((self.read_raw_data(((float)TEMP_OUT_H)/340.00) + 36.53))
 
     # returns the acceleration data as a formatted, printable string.
 

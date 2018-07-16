@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 
 class Button:
 
-    # Constructor.
+    # Constructor
     def __init__(self, pin):
 
         self.pin = pin
@@ -26,6 +26,7 @@ class Button:
         pressed = (GPIO.input(self.pin))
 
         if (pressed):
+            print("\t\t** Button pressed! **")
             return True
         else:
             return False

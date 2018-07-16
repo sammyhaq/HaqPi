@@ -1,4 +1,5 @@
 """
+
 OutputComponent.py
 Code by Sammy Haq
 https://github.com/sammyhaq
@@ -23,17 +24,18 @@ class OutputComponent:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.OUT)
 
-    # self.pulse = GPIO.PWM(self.pin, 1000);
-    # self.pulse.start(0);
-
-    # In some cases, it might be more useful to have hardcoded functions for
-    # turning the LED on or off. That is the purpose of the following two
-    # functions:
+        self.pulse = GPIO.PWM(self.pin, 100)
+        self.pulse.stop()
+        GPIO.output(self.pin, GPIO.LOW)
 
     def toggleOn(self):
+        self.pulse.stop()
+        time.sleep(0.1)
         GPIO.output(self.pin, GPIO.HIGH)
 
     def toggleOff(self):
+        self.pulse.stop()
+        time.sleep(0.1)
         GPIO.output(self.pin, GPIO.LOW)
 
     # Vibrates/Sounds the device for a length of time (sec).
@@ -52,26 +54,7 @@ class OutputComponent:
         while (time.time() < timerEnd):
             self.step(delay)
 
-    # DONT USE THIS UNLESS YOU ENABLE THE PWM OPTION IN INIT
-
-    def breathe(self, duration):
-
-        if (duration == 0):
-            return
-
-        while True:
-
-            delay = duration / (100/4) / 2
-
-            for dutyCycle in range(0, 101, 4):
-                self.pulse.ChangeDutyCycle(dutyCycle)
-                sleep(delay)
-            for dutyCycle in reversed(range(0, 101, 4)):
-                self.pulse.ChangeDutyCycle(dutyCycle)
-                sleep(delay)
-
-    # Safely terminates the class. Good to call before closing script.
     def __destroy__(self):
-        # self.pulse.stop();
+        self.pulse.stop()
         GPIO.output(self.pin, GPIO.HIGH)
         GPIO.cleanup()

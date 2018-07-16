@@ -1,3 +1,1 @@
-from OutputComponent import OutputComponent
-import InputComponent
-import Email
+import Component
