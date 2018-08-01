@@ -12,6 +12,7 @@ from OutputComponent import OutputComponent
 import time
 import RPi.GPIO as GPIO
 
+
 class Buzzer(OutputComponent):
     def __init__(self, pin, dutyCycle=66):
         OutputComponent.__init__(self, pin)
