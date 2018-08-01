@@ -38,10 +38,11 @@ class OutputComponent:
         time.sleep(0.1)
         GPIO.output(self.pin, GPIO.LOW)
 
-    # Vibrates/Sounds the device for a length of time (sec).
+    # Vibrates/Sounds the device for a length of time (sec). Can only reach a
+    # maximum number of steps.
     def step(self, duration):
         GPIO.output(self.pin, GPIO.HIGH)
-        time.sleep(duration)
+        time.sleep(0.375)
         GPIO.output(self.pin, GPIO.LOW)
         time.sleep(duration)
 
