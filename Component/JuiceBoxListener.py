@@ -27,7 +27,7 @@ class JuiceBoxListener:
         # adds a listener that keeps watching the battery pin. Triggers
         # lowBattery_callbackFunction if battery is low.
         GPIO.add_event_detect(self.pin, GPIO.RISING,
-                              callback=self.lowBattery_callbackFunction)
+                              callback=lowBattery_callbackFunction)
 
     # Triggers if the battery is low.
     def lowBattery_callbackFunction(self):
