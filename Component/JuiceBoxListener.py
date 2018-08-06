@@ -20,24 +20,28 @@ class JuiceBoxListener:
     def __init__(self, pin, controller):
 
         self.pin = pin
+        self.controller = controller
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+        # Triggers if the battery is low.
+        def lowBattery_callbackFunction(pin):
+
+            print("Battery low! shutting down..")
+
+            # if writer isn't closed yet, close it
+            if (not self.controller.writerAction().isClosed()):
+                self.controller.writerAction().closeWriter()
+
+            self.controller.buzzerAction().metronome(0.1,0.3,0.05)
+            self.controller.ledAction().breathe(30, 0.005)
+
+            GPIO.cleanup()
+            os.system("sudo shutdown -h now")
+
+
         # adds a listener that keeps watching the battery pin. Triggers
         # lowBattery_callbackFunction if battery is low.
-        GPIO.add_event_detect(self.pin, GPIO.RISING,
+        GPIO.add_event_detect(pin, GPIO.RISING,
                               callback=lowBattery_callbackFunction)
-
-    # Triggers if the battery is low.
-    def lowBattery_callbackFunction(self):
-        GPIO.cleanup()
-
-        # if writer isn't closed yet, close it
-        if (not controller.writerAction().isClosed()):
-            controller.writerAction().closeWriter()
-
-        controller.ledAction().breathe(30, 0.005)
-        os.system("sudo shutdown -h now")
-
-

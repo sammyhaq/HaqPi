@@ -40,20 +40,20 @@ class OutputComponent:
 
     # Vibrates/Sounds the device for a length of time (sec). Can only reach a
     # maximum number of steps.
-    def step(self, duration):
+    def step(self, duration, stepdownDelay=0.375):
         GPIO.output(self.pin, GPIO.HIGH)
-        time.sleep(0.375)
+        time.sleep(stepdownDelay)
         GPIO.output(self.pin, GPIO.LOW)
         time.sleep(duration)
 
     # Vibrates/Sounds the device for a certain length of time continuously.
     # Delay between the vibrations/sounds are set via the delay variable.
-    def metronome(self, delay, duration):
+    def metronome(self, delay, duration, stepdownDelay=0.375):
 
         timerEnd = time.time() + duration
 
         while (time.time() < timerEnd):
-            self.step(delay)
+            self.step(delay, stepdownDelay)
 
     def __destroy__(self):
         self.pulse.stop()
